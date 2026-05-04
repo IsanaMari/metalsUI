@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import type { ChemicalElement } from '@/types';
+import type { ChemicalElement } from '@/types/element';
 import { CATEGORY_COLORS } from '@/constants/config';
-import { ElementCell } from './ElementCell';
+import { ElementCell } from '@/components/ElementCell';
 
 interface PeriodicTableProps {
   elements: ChemicalElement[];

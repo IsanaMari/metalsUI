@@ -1,4 +1,4 @@
-import type { ElementCategory } from '@/types';
+import type { ElementCategory } from '@/types/element';
 
 export const CATEGORY_COLORS: Record<ElementCategory, string> = {
   'alkali-metal':

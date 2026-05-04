@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Atom, Hash, Weight, Tag, FileText, Grid } from 'lucide-react';
-import type { ChemicalElement } from '@/types';
+import type { ChemicalElement } from '@/types/element';
 import { CATEGORY_COLORS, CATEGORY_LABELS } from '@/constants/config';
 
 interface ElementDetailsProps {

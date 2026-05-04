@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { ElementCategory } from '@/types';
+import type { ElementCategory } from '@/types/element';
 
 interface FilterState {
   searchQuery: string;

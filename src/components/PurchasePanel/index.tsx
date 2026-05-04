@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import Decimal from 'decimal.js';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Wallet, TrendingUp, AlertCircle, CheckCircle2, Lock } from 'lucide-react';
-import type { ChemicalElement } from '@/types';
+import type { ChemicalElement } from '@/types/element';
 import { useConnect } from '@/hooks/useConnect';
 import { Button, Input } from '@/components';
 import { MAX_QUANTITY, MIN_QUANTITY, QUANTITY_STEP } from '@/constants/config';

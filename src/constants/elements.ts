@@ -1,4 +1,4 @@
-import type { ChemicalElement } from '@/types';
+import type { ChemicalElement } from '@/types/element';
 
 export const ELEMENTS: ChemicalElement[] = [
   // ── Period 1 ──────────────────────────────────────────────────────────────
@@ -1321,7 +1321,7 @@ export const ELEMENTS: ChemicalElement[] = [
 ];
 
 export const ELEMENTS_BY_SYMBOL = new Map<string, ChemicalElement>(
-  ELEMENTS.map((el) => [el.symbol, el]),
+  ELEMENTS.map((el) => [el.symbol.toUpperCase(), el]),
 );
 
 export const LISTED_ELEMENTS = ELEMENTS.filter((el) => el.pricePerGram > 0);

@@ -6,8 +6,8 @@ import { ELEMENTS } from '@/constants/elements';
 import { CATEGORY_COLORS, CATEGORY_LABELS, ROUTES } from '@/constants/config';
 import { useStore } from '@/store/useStore';
 import { Input, Button, Card } from '@/components';
-import { PeriodicTable } from '@/features/periodic-table/PeriodicTable';
-import type { ElementCategory } from '@/types';
+import { PeriodicTable } from '@/components/PeriodicTable';
+import type { ElementCategory } from '@/types/element';
 
 const ALL_CATEGORIES = Object.keys(CATEGORY_LABELS) as ElementCategory[];
 

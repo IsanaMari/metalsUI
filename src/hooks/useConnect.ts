@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { UseConnectReturn } from '@/types';
+import type { UseConnectReturn } from '@/types/element';
 import { MOCK_WALLET_ADDRESS } from '@/constants/config';
 
 // Internal Zustand store — private to this module. Swap the internals for

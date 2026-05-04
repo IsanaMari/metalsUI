@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock } from 'lucide-react';
-import type { ChemicalElement } from '@/types';
+import type { ChemicalElement } from '@/types/element';
 import { CATEGORY_COLORS, ROUTES } from '@/constants/config';
 
 interface ElementCellProps {

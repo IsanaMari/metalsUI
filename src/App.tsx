@@ -1,9 +1,9 @@
 import { Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { Header } from '@/layouts/Header';
-import { Footer } from '@/layouts/Footer';
-import { TablePage } from '@/pages/TablePage';
-import { ElementDetailPage } from '@/pages/ElementDetailPage';
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
+import { TablePage } from '@/pages/Table';
+import { ElementDetailPage } from '@/pages/ElementDetail';
 import { ROUTES } from '@/constants/config';
 
 export const App = () => (

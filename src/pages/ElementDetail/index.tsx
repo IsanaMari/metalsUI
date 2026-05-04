@@ -2,8 +2,8 @@ import { useParams, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { useElement } from '@/hooks/useElement';
-import { ElementDetails } from '@/features/element-details/ElementDetails';
-import { PurchasePanel } from '@/features/element-details/PurchasePanel';
+import { ElementDetails } from '@/components/ElementDetails';
+import { PurchasePanel } from '@/components/PurchasePanel';
 import { ROUTES } from '@/constants/config';
 
 const PAGE_VARIANTS = {
