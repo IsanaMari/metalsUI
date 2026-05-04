@@ -123,7 +123,7 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
             style={{ gridColumn: '1 / span 2', gridRow: 9 }}
             className="flex items-center justify-end pr-1"
           >
-            <span className="text-[9px] font-mono text-pink-400/60 text-right leading-tight">
+            <span className="text-[9px] font-mono text-pink-600/70 dark:text-pink-400/60 text-right leading-tight">
               Lantha&shy;nides
             </span>
           </div>
@@ -131,7 +131,7 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
             style={{ gridColumn: '1 / span 2', gridRow: 10 }}
             className="flex items-center justify-end pr-1"
           >
-            <span className="text-[9px] font-mono text-indigo-400/60 text-right leading-tight">
+            <span className="text-[9px] font-mono text-indigo-600/70 dark:text-indigo-400/60 text-right leading-tight">
               Acti&shy;nides
             </span>
           </div>

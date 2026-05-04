@@ -57,7 +57,7 @@ export const Modal = ({
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             className={[
-              'relative w-full rounded-2xl border border-border bg-surface p-6 shadow-2xl shadow-black/50',
+              'relative w-full rounded-2xl border border-border bg-surface p-6 shadow-2xl shadow-neutral-400/30 dark:shadow-black/50',
               MAX_WIDTH[maxWidth],
             ].join(' ')}
           >

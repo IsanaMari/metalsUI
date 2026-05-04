@@ -82,7 +82,7 @@ export const PurchasePanel = ({ element }: PurchasePanelProps) => {
         )}
 
         {isListed && (
-          <div className="mt-2 flex items-center gap-1.5 text-xs text-green-400/80">
+          <div className="mt-2 flex items-center gap-1.5 text-xs text-green-600/80 dark:text-green-400/80">
             <TrendingUp size={12} />
             <span className="font-mono">Live market data · Updated every block</span>
           </div>
@@ -133,7 +133,7 @@ export const PurchasePanel = ({ element }: PurchasePanelProps) => {
           <div className="flex flex-col gap-3">
             {!isConnected ? (
               <>
-                <div className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-amber-400">
+                <div className="flex items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-amber-600 dark:border-amber-500/30 dark:text-amber-400">
                   <AlertCircle size={14} />
                   <span className="font-mono text-xs">Connect your wallet to purchase</span>
                 </div>
@@ -148,7 +148,7 @@ export const PurchasePanel = ({ element }: PurchasePanelProps) => {
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="flex items-center gap-2 rounded-lg border border-green-500/30 bg-green-500/10 px-4 py-3 text-green-400"
+                    className="flex items-center gap-2 rounded-lg border border-green-500/40 bg-green-500/10 px-4 py-3 text-green-600 dark:border-green-500/30 dark:text-green-400"
                   >
                     <CheckCircle2 size={14} />
                     <span className="font-mono text-xs">

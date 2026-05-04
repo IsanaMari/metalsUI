@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tokenized Elements — Web3 Marketplace</title>
     <meta name="description" content="Trade tokenized chemical elements on the blockchain. The world's first periodic table marketplace." />
+    <!-- Prevent flash of wrong theme: read preference before first paint -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme-preference');
+          if (stored === 'light' || stored === 'dark') {
+            document.documentElement.className = stored;
+          } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.documentElement.className = 'light';
+          } else {
+            document.documentElement.className = 'dark';
+          }
+        } catch (e) {
+          document.documentElement.className = 'dark';
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />

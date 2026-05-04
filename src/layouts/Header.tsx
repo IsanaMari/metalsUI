@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Atom, Wallet, LogOut, ChevronRight } from 'lucide-react';
 import { useConnect } from '@/hooks/useConnect';
-import { Button } from '@/components';
+import { Button, ThemeToggle } from '@/components';
 import { ROUTES } from '@/constants/config';
 
 const truncate = (addr: string) =>
@@ -50,6 +50,7 @@ export const Header = () => {
 
         {/* Wallet */}
         <div className="ml-auto flex items-center gap-2">
+          <ThemeToggle />
           {isConnected && address ? (
             <div className="flex items-center gap-2">
               <div className="hidden sm:flex items-center gap-2 rounded-lg border border-accent/30 bg-accent/10 px-3 py-1.5">
