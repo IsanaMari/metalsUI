@@ -1,10 +1,11 @@
-import { motion } from 'framer-motion';
-import { Atom, Hash, Weight, Tag, FileText, Grid } from 'lucide-react';
-import type { ChemicalElement } from '@/types/element';
-import { CATEGORY_COLORS, CATEGORY_LABELS } from '@/constants/config';
+import { motion } from 'framer-motion'
+import { Atom, FileText, Grid, Hash, Tag, Weight } from 'lucide-react'
+
+import { CATEGORY_COLORS, CATEGORY_LABELS } from '@/constants/config'
+import type { ChemicalElement } from '@/types/element'
 
 interface ElementDetailsProps {
-  element: ChemicalElement;
+  element: ChemicalElement
 }
 
 const STAT_VARIANTS = {
@@ -14,13 +15,13 @@ const STAT_VARIANTS = {
     x: 0,
     transition: { delay: i * 0.07, type: 'spring', stiffness: 280, damping: 22 },
   }),
-};
+}
 
 interface StatRowProps {
-  icon: React.ReactNode;
-  label: string;
-  value: React.ReactNode;
-  index: number;
+  icon: React.ReactNode
+  label: string
+  value: React.ReactNode
+  index: number
 }
 
 const StatRow = ({ icon, label, value, index }: StatRowProps) => (
@@ -37,11 +38,11 @@ const StatRow = ({ icon, label, value, index }: StatRowProps) => (
       <p className="font-mono text-sm font-medium text-text-primary break-all">{value}</p>
     </div>
   </motion.div>
-);
+)
 
 export const ElementDetails = ({ element }: ElementDetailsProps) => {
-  const categoryColorClass = CATEGORY_COLORS[element.category];
-  const categoryLabel = CATEGORY_LABELS[element.category];
+  const categoryColorClass = CATEGORY_COLORS[element.category]
+  const categoryLabel = CATEGORY_LABELS[element.category]
 
   return (
     <div className="flex flex-col gap-4">
@@ -52,12 +53,13 @@ export const ElementDetails = ({ element }: ElementDetailsProps) => {
         transition={{ type: 'spring', stiffness: 250, damping: 22 }}
         className={[
           'flex flex-col items-center justify-center rounded-2xl border py-10 gap-1',
-          categoryColorClass.split(' ').filter(c => !c.startsWith('hover:')).join(' '),
+          categoryColorClass
+            .split(' ')
+            .filter((c) => !c.startsWith('hover:'))
+            .join(' '),
         ].join(' ')}
       >
-        <span className="font-mono text-xs text-current opacity-60">
-          {element.atomicNumber}
-        </span>
+        <span className="font-mono text-xs text-current opacity-60">{element.atomicNumber}</span>
         <span className="font-mono text-7xl font-bold leading-none text-current">
           {element.symbol}
         </span>
@@ -96,18 +98,8 @@ export const ElementDetails = ({ element }: ElementDetailsProps) => {
               : `Period ${element.period}, Group ${element.group}`
           }
         />
-        <StatRow
-          index={3}
-          icon={<Tag size={15} />}
-          label="Category"
-          value={categoryLabel}
-        />
-        <StatRow
-          index={4}
-          icon={<Atom size={15} />}
-          label="Symbol"
-          value={element.symbol}
-        />
+        <StatRow index={3} icon={<Tag size={15} />} label="Category" value={categoryLabel} />
+        <StatRow index={4} icon={<Atom size={15} />} label="Symbol" value={element.symbol} />
       </div>
 
       {/* Description */}
@@ -126,5 +118,5 @@ export const ElementDetails = ({ element }: ElementDetailsProps) => {
         </p>
       </motion.div>
     </div>
-  );
-};
+  )
+}

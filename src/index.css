@@ -5,22 +5,22 @@
 /* ── Theme tokens ─────────────────────────────────────────────── */
 :root {
   --color-background: #f8f8fc;
-  --color-surface:    #ffffff;
-  --color-surface-2:  #f0f0f8;
-  --color-border:     #e2e2f0;
+  --color-surface: #ffffff;
+  --color-surface-2: #f0f0f8;
+  --color-border: #e2e2f0;
   --color-text-primary: #0f0f1a;
-  --color-text-muted:   #6b7280;
-  --color-gold:         #b8860b;
+  --color-text-muted: #6b7280;
+  --color-gold: #b8860b;
 }
 
 .dark {
   --color-background: #0a0a0f;
-  --color-surface:    #111118;
-  --color-surface-2:  #161622;
-  --color-border:     #1e1e2e;
+  --color-surface: #111118;
+  --color-surface-2: #161622;
+  --color-border: #1e1e2e;
   --color-text-primary: #f1f5f9;
-  --color-text-muted:   #64748b;
-  --color-gold:         #d4a843;
+  --color-text-muted: #64748b;
+  --color-gold: #d4a843;
 }
 
 /* ── Base layer ───────────────────────────────────────────────── */
@@ -40,7 +40,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
   }
 
   ::-webkit-scrollbar {
@@ -80,8 +82,12 @@
     border-radius: inherit;
     padding: 1px;
     background: linear-gradient(135deg, #7c3aed, #3b82f6);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;

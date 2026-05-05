@@ -1,41 +1,38 @@
-import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { useEffect } from 'react'
+
+import { AnimatePresence, motion } from 'framer-motion'
+import { X } from 'lucide-react'
 
 interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  children: React.ReactNode;
-  maxWidth?: 'sm' | 'md' | 'lg';
+  isOpen: boolean
+  onClose: () => void
+  title?: string
+  children: React.ReactNode
+  maxWidth?: 'sm' | 'md' | 'lg'
 }
 
 const MAX_WIDTH: Record<string, string> = {
   sm: 'max-w-sm',
   md: 'max-w-md',
   lg: 'max-w-lg',
-};
+}
 
-export const Modal = ({
-  isOpen,
-  onClose,
-  title,
-  children,
-  maxWidth = 'md',
-}: ModalProps) => {
+export const Modal = ({ isOpen, onClose, title, children, maxWidth = 'md' }: ModalProps) => {
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [isOpen, onClose]);
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [isOpen, onClose])
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
+    document.body.style.overflow = isOpen ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
 
   return (
     <AnimatePresence>
@@ -63,9 +60,7 @@ export const Modal = ({
           >
             {title && (
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="font-mono text-lg font-semibold text-text-primary">
-                  {title}
-                </h2>
+                <h2 className="font-mono text-lg font-semibold text-text-primary">{title}</h2>
                 <button
                   onClick={onClose}
                   className="rounded-lg p-1 text-text-muted transition-colors hover:bg-surface-2 hover:text-text-primary"
@@ -89,5 +84,5 @@ export const Modal = ({
         </div>
       )}
     </AnimatePresence>
-  );
-};
+  )
+}

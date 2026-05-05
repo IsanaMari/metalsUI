@@ -1,10 +1,10 @@
-import { motion } from 'framer-motion';
+import { motion } from 'framer-motion'
 
 interface CardProps {
-  children: React.ReactNode;
-  className?: string;
-  hoverable?: boolean;
-  onClick?: () => void;
+  children: React.ReactNode
+  className?: string
+  hoverable?: boolean
+  onClick?: () => void
 }
 
 export const Card = ({ children, className = '', hoverable = false, onClick }: CardProps) => {
@@ -21,7 +21,7 @@ export const Card = ({ children, className = '', hoverable = false, onClick }: C
       >
         {children}
       </motion.div>
-    );
+    )
   }
 
   return (
@@ -35,5 +35,5 @@ export const Card = ({ children, className = '', hoverable = false, onClick }: C
     >
       {children}
     </div>
-  );
-};
+  )
+}

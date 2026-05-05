@@ -1,17 +1,18 @@
-import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Atom, Wallet, LogOut, ChevronRight } from 'lucide-react';
-import { useConnect } from '@/hooks/useConnect';
-import { Button, ThemeToggle } from '@/components';
-import { ROUTES } from '@/constants/config';
+import { Link, useLocation } from 'react-router-dom'
 
-const truncate = (addr: string) =>
-  `${addr.slice(0, 6)}…${addr.slice(-4)}`;
+import { motion } from 'framer-motion'
+import { Atom, ChevronRight, LogOut, Wallet } from 'lucide-react'
+
+import { Button, ThemeToggle } from '@/components'
+import { ROUTES } from '@/constants/config'
+import { useConnect } from '@/hooks/useConnect'
+
+const truncate = (addr: string) => `${addr.slice(0, 6)}…${addr.slice(-4)}`
 
 export const Header = () => {
-  const { isConnected, address, connect, disconnect } = useConnect();
-  const location = useLocation();
-  const isDetail = location.pathname.startsWith('/element/');
+  const { isConnected, address, connect, disconnect } = useConnect()
+  const location = useLocation()
+  const isDetail = location.pathname.startsWith('/element/')
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-md">
@@ -30,7 +31,8 @@ export const Header = () => {
               Tokenized
             </span>
             <span className="font-mono text-sm font-bold text-accent tracking-tight">
-              {' '}Elements
+              {' '}
+              Elements
             </span>
           </div>
         </Link>
@@ -55,9 +57,7 @@ export const Header = () => {
             <div className="flex items-center gap-2">
               <div className="hidden sm:flex items-center gap-2 rounded-lg border border-accent/30 bg-accent/10 px-3 py-1.5">
                 <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse-slow" />
-                <span className="font-mono text-xs text-accent">
-                  {truncate(address)}
-                </span>
+                <span className="font-mono text-xs text-accent">{truncate(address)}</span>
               </div>
               <Button variant="ghost" size="sm" onClick={disconnect} title="Disconnect wallet">
                 <LogOut size={14} />
@@ -73,5 +73,5 @@ export const Header = () => {
         </div>
       </div>
     </header>
-  );
-};
+  )
+}

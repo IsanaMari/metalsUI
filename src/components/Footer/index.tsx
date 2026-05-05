@@ -1,6 +1,8 @@
-import { Atom, Github, Twitter } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { ROUTES } from '@/constants/config';
+import { Link } from 'react-router-dom'
+
+import { Atom, Github, Twitter } from 'lucide-react'
+
+import { ROUTES } from '@/constants/config'
 
 export const Footer = () => (
   <footer className="mt-auto border-t border-border bg-surface">
@@ -32,14 +34,22 @@ export const Footer = () => (
           Audits
         </a>
         <div className="flex items-center gap-3 pl-2">
-          <a href="#" className="text-text-muted transition-colors hover:text-text-primary" aria-label="GitHub">
+          <a
+            href="#"
+            className="text-text-muted transition-colors hover:text-text-primary"
+            aria-label="GitHub"
+          >
             <Github size={14} />
           </a>
-          <a href="#" className="text-text-muted transition-colors hover:text-text-primary" aria-label="Twitter">
+          <a
+            href="#"
+            className="text-text-muted transition-colors hover:text-text-primary"
+            aria-label="Twitter"
+          >
             <Twitter size={14} />
           </a>
         </div>
       </nav>
     </div>
   </footer>
-);
+)

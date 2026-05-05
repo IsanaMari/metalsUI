@@ -1,14 +1,15 @@
-import { forwardRef } from 'react';
-import { motion } from 'framer-motion';
+import { forwardRef } from 'react'
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'gold';
-type Size = 'sm' | 'md' | 'lg';
+import { motion } from 'framer-motion'
+
+type Variant = 'primary' | 'secondary' | 'ghost' | 'gold'
+type Size = 'sm' | 'md' | 'lg'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: Variant;
-  size?: Size;
-  loading?: boolean;
-  fullWidth?: boolean;
+  variant?: Variant
+  size?: Size
+  loading?: boolean
+  fullWidth?: boolean
 }
 
 const VARIANT_CLASSES: Record<Variant, string> = {
@@ -18,15 +19,14 @@ const VARIANT_CLASSES: Record<Variant, string> = {
     'bg-surface-2 hover:bg-border text-text-primary border border-border hover:border-accent/40',
   ghost:
     'bg-transparent hover:bg-surface-2 text-text-muted hover:text-text-primary border border-transparent hover:border-border',
-  gold:
-    'bg-gold/10 hover:bg-gold/20 text-gold border border-gold/40 hover:border-gold/70 shadow-lg shadow-gold/10',
-};
+  gold: 'bg-gold/10 hover:bg-gold/20 text-gold border border-gold/40 hover:border-gold/70 shadow-lg shadow-gold/10',
+}
 
 const SIZE_CLASSES: Record<Size, string> = {
   sm: 'px-3 py-1.5 text-xs',
   md: 'px-4 py-2 text-sm',
   lg: 'px-6 py-3 text-base',
-};
+}
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -40,9 +40,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       ...rest
     },
-    ref,
+    ref
   ) => {
-    const isDisabled = disabled || loading;
+    const isDisabled = disabled || loading
 
     return (
       // motion.div wrapper avoids the onAnimationStart type conflict between
@@ -76,8 +76,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           <span className={loading ? 'invisible' : ''}>{children}</span>
         </button>
       </motion.div>
-    );
-  },
-);
+    )
+  }
+)
 
-Button.displayName = 'Button';
+Button.displayName = 'Button'

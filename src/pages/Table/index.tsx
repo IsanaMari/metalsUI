@@ -1,43 +1,45 @@
-import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, SlidersHorizontal } from 'lucide-react';
-import { ELEMENTS } from '@/constants/elements';
-import { CATEGORY_COLORS, CATEGORY_LABELS, ROUTES } from '@/constants/config';
-import { useStore } from '@/store/useStore';
-import { Input, Button, Card } from '@/components';
-import { PeriodicTable } from '@/components/PeriodicTable';
-import type { ElementCategory } from '@/types/element';
+import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const ALL_CATEGORIES = Object.keys(CATEGORY_LABELS) as ElementCategory[];
+import { AnimatePresence, motion } from 'framer-motion'
+import { Search, SlidersHorizontal, X } from 'lucide-react'
+
+import { Button, Card, Input } from '@/components'
+import { PeriodicTable } from '@/components/PeriodicTable'
+import { CATEGORY_COLORS, CATEGORY_LABELS, ROUTES } from '@/constants/config'
+import { ELEMENTS } from '@/constants/elements'
+import { useStore } from '@/store/useStore'
+import type { ElementCategory } from '@/types/element'
+
+const ALL_CATEGORIES = Object.keys(CATEGORY_LABELS) as ElementCategory[]
 
 const formatPrice = (price: number): string => {
-  if (price <= 0) return 'Not listed';
-  if (price >= 1000) return `$${(price / 1000).toFixed(1)}k/g`;
-  if (price >= 1) return `$${price.toFixed(2)}/g`;
-  return `$${price.toFixed(4)}/g`;
-};
+  if (price <= 0) return 'Not listed'
+  if (price >= 1000) return `$${(price / 1000).toFixed(1)}k/g`
+  if (price >= 1) return `$${price.toFixed(2)}/g`
+  return `$${price.toFixed(4)}/g`
+}
 
 export const TablePage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const { searchQuery, selectedCategory, setSearchQuery, setSelectedCategory, clearFilters } =
-    useStore();
-  const [showFilters, setShowFilters] = useState(false);
+    useStore()
+  const [showFilters, setShowFilters] = useState(false)
 
   const filteredElements = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
+    const q = searchQuery.trim().toLowerCase()
     return ELEMENTS.filter((el) => {
       const matchesSearch =
         !q ||
         el.name.toLowerCase().includes(q) ||
         el.symbol.toLowerCase().includes(q) ||
-        String(el.atomicNumber).includes(q);
-      const matchesCategory = !selectedCategory || el.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    });
-  }, [searchQuery, selectedCategory]);
+        String(el.atomicNumber).includes(q)
+      const matchesCategory = !selectedCategory || el.category === selectedCategory
+      return matchesSearch && matchesCategory
+    })
+  }, [searchQuery, selectedCategory])
 
-  const hasFilters = !!searchQuery || !!selectedCategory;
+  const hasFilters = !!searchQuery || !!selectedCategory
 
   return (
     <div className="min-h-screen">
@@ -57,8 +59,8 @@ export const TablePage = () => {
             transition={{ delay: 0.1 }}
             className="mt-1 font-mono text-sm text-text-muted"
           >
-            {ELEMENTS.filter((e) => e.pricePerGram > 0).length} elements listed ·{' '}
-            {ELEMENTS.length} total in the periodic table
+            {ELEMENTS.filter((e) => e.pricePerGram > 0).length} elements listed · {ELEMENTS.length}{' '}
+            total in the periodic table
           </motion.p>
         </div>
       </div>
@@ -113,14 +115,12 @@ export const TablePage = () => {
             >
               <div className="mx-auto max-w-screen-2xl flex flex-wrap gap-2 pt-3">
                 {ALL_CATEGORIES.map((cat) => {
-                  const colorBase = CATEGORY_COLORS[cat].split(' ')[0];
-                  const isSelected = selectedCategory === cat;
+                  const colorBase = CATEGORY_COLORS[cat].split(' ')[0]
+                  const isSelected = selectedCategory === cat
                   return (
                     <button
                       key={cat}
-                      onClick={() =>
-                        setSelectedCategory(isSelected ? null : cat)
-                      }
+                      onClick={() => setSelectedCategory(isSelected ? null : cat)}
                       className={[
                         'rounded-full border px-3 py-1 font-mono text-xs transition-all duration-150',
                         isSelected
@@ -130,7 +130,7 @@ export const TablePage = () => {
                     >
                       {CATEGORY_LABELS[cat]}
                     </button>
-                  );
+                  )
                 })}
               </div>
             </motion.div>
@@ -138,22 +138,17 @@ export const TablePage = () => {
         </AnimatePresence>
       </div>
 
-      {/* Desktop: periodic table — hidden on mobile */}
-      <div className="hidden md:block px-4 py-6 sm:px-6">
-        <div className="mx-auto max-w-screen-2xl">
-          {hasFilters ? (
-            <p className="font-mono text-xs text-text-muted mb-4">
-              Showing {filteredElements.length} element{filteredElements.length !== 1 ? 's' : ''} ·{' '}
-              <button
-                className="text-accent hover:underline"
-                onClick={clearFilters}
-              >
-                Clear filters to see full table
-              </button>
-            </p>
-          ) : null}
-          <PeriodicTable elements={hasFilters ? filteredElements : ELEMENTS} />
-        </div>
+      {/* Desktop: periodic table — hidden on mobile, full-bleed */}
+      <div className="hidden md:block">
+        {hasFilters ? (
+          <p className="font-mono text-xs text-text-muted px-6 pt-4 pb-2">
+            Showing {filteredElements.length} element{filteredElements.length !== 1 ? 's' : ''} ·{' '}
+            <button className="text-accent hover:underline" onClick={clearFilters}>
+              Clear filters to see full table
+            </button>
+          </p>
+        ) : null}
+        <PeriodicTable elements={hasFilters ? filteredElements : ELEMENTS} />
       </div>
 
       {/* Mobile: card list — always visible on small screens */}
@@ -180,9 +175,7 @@ export const TablePage = () => {
                     el.pricePerGram === 0 ? 'opacity-50' : '',
                   ].join(' ')}
                 >
-                  <span className="font-mono text-xs text-text-muted">
-                    {el.atomicNumber}
-                  </span>
+                  <span className="font-mono text-xs text-text-muted">{el.atomicNumber}</span>
                   <span
                     className={[
                       'font-mono text-2xl font-bold',
@@ -212,5 +205,5 @@ export const TablePage = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}

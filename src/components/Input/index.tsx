@@ -1,18 +1,18 @@
-import { forwardRef } from 'react';
+import { forwardRef } from 'react'
 
 // Omit `prefix` from HTML attrs — it's a rare, non-standard HTML attribute that
 // conflicts with our slot prop of the same name.
 interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'prefix'> {
-  label?: string;
-  error?: string;
-  hint?: string;
-  prefix?: React.ReactNode;
-  suffix?: React.ReactNode;
+  label?: string
+  error?: string
+  hint?: string
+  prefix?: React.ReactNode
+  suffix?: React.ReactNode
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, hint, prefix, suffix, className = '', id, ...rest }, ref) => {
-    const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-');
+    const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-')
 
     return (
       <div className="flex flex-col gap-1.5">
@@ -33,9 +33,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               : 'border-border focus-within:border-accent/60',
           ].join(' ')}
         >
-          {prefix && (
-            <span className="shrink-0 text-text-muted text-sm">{prefix}</span>
-          )}
+          {prefix && <span className="shrink-0 text-text-muted text-sm">{prefix}</span>}
           <input
             ref={ref}
             id={inputId}
@@ -46,15 +44,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ].join(' ')}
             {...rest}
           />
-          {suffix && (
-            <span className="shrink-0 text-text-muted text-sm">{suffix}</span>
-          )}
+          {suffix && <span className="shrink-0 text-text-muted text-sm">{suffix}</span>}
         </div>
         {error && <p className="text-xs text-red-400">{error}</p>}
         {!error && hint && <p className="text-xs text-text-muted">{hint}</p>}
       </div>
-    );
-  },
-);
+    )
+  }
+)
 
-Input.displayName = 'Input';
+Input.displayName = 'Input'

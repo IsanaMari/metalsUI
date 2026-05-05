@@ -1,27 +1,29 @@
-import { useState, useCallback } from 'react';
-import Decimal from 'decimal.js';
-import { motion } from 'framer-motion';
-import { ShoppingCart, Wallet, TrendingUp, AlertCircle, CheckCircle2, Lock } from 'lucide-react';
-import type { ChemicalElement } from '@/types/element';
-import { useConnect } from '@/hooks/useConnect';
-import { Button, Input } from '@/components';
-import { MAX_QUANTITY, MIN_QUANTITY, QUANTITY_STEP } from '@/constants/config';
+import { useCallback, useState } from 'react'
+
+import Decimal from 'decimal.js'
+import { motion } from 'framer-motion'
+import { AlertCircle, CheckCircle2, Lock, ShoppingCart, TrendingUp, Wallet } from 'lucide-react'
+
+import { Button, Input } from '@/components'
+import { MAX_QUANTITY, MIN_QUANTITY, QUANTITY_STEP } from '@/constants/config'
+import { useConnect } from '@/hooks/useConnect'
+import type { ChemicalElement } from '@/types/element'
 
 interface PurchasePanelProps {
-  element: ChemicalElement;
+  element: ChemicalElement
 }
 
-Decimal.set({ precision: 28, rounding: Decimal.ROUND_HALF_EVEN });
+Decimal.set({ precision: 28, rounding: Decimal.ROUND_HALF_EVEN })
 
 const computeTotal = (price: number, qty: string): string => {
   try {
-    const d = new Decimal(qty);
-    if (d.isNaN() || d.lte(0)) return '0.00';
-    return new Decimal(price).mul(d).toFixed(2);
+    const d = new Decimal(qty)
+    if (d.isNaN() || d.lte(0)) return '0.00'
+    return new Decimal(price).mul(d).toFixed(2)
   } catch {
-    return '0.00';
+    return '0.00'
   }
-};
+}
 
 const PANEL_VARIANTS = {
   hidden: { opacity: 0, y: 20 },
@@ -30,30 +32,30 @@ const PANEL_VARIANTS = {
     y: 0,
     transition: { type: 'spring', stiffness: 260, damping: 22, delay: 0.1 },
   },
-};
+}
 
 export const PurchasePanel = ({ element }: PurchasePanelProps) => {
-  const { isConnected, connect } = useConnect();
-  const [quantity, setQuantity] = useState('1');
-  const [purchaseSuccess, setPurchaseSuccess] = useState(false);
+  const { isConnected, connect } = useConnect()
+  const [quantity, setQuantity] = useState('1')
+  const [purchaseSuccess, setPurchaseSuccess] = useState(false)
 
-  const isListed = element.pricePerGram > 0;
-  const total = computeTotal(element.pricePerGram, quantity);
+  const isListed = element.pricePerGram > 0
+  const total = computeTotal(element.pricePerGram, quantity)
 
   const quantityError = (() => {
-    const n = parseFloat(quantity);
-    if (isNaN(n)) return 'Enter a valid number';
-    if (n < parseFloat(MIN_QUANTITY)) return `Minimum is ${MIN_QUANTITY} g`;
-    if (n > parseFloat(MAX_QUANTITY)) return `Maximum is ${MAX_QUANTITY} g`;
-    return undefined;
-  })();
+    const n = parseFloat(quantity)
+    if (isNaN(n)) return 'Enter a valid number'
+    if (n < parseFloat(MIN_QUANTITY)) return `Minimum is ${MIN_QUANTITY} g`
+    if (n > parseFloat(MAX_QUANTITY)) return `Maximum is ${MAX_QUANTITY} g`
+    return undefined
+  })()
 
   const handleBuy = useCallback(() => {
-    if (!isConnected || quantityError || !isListed) return;
+    if (!isConnected || quantityError || !isListed) return
     // Placeholder — swap for on-chain tx
-    setPurchaseSuccess(true);
-    setTimeout(() => setPurchaseSuccess(false), 3000);
-  }, [isConnected, quantityError, isListed]);
+    setPurchaseSuccess(true)
+    setTimeout(() => setPurchaseSuccess(false), 3000)
+  }, [isConnected, quantityError, isListed])
 
   return (
     <motion.div
@@ -70,7 +72,11 @@ export const PurchasePanel = ({ element }: PurchasePanelProps) => {
         {isListed ? (
           <div className="flex items-baseline gap-2">
             <span className="font-mono text-3xl font-bold text-gold">
-              ${element.pricePerGram.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
+              $
+              {element.pricePerGram.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 4,
+              })}
             </span>
             <span className="font-mono text-sm text-text-muted">/ gram</span>
           </div>
@@ -181,12 +187,10 @@ export const PurchasePanel = ({ element }: PurchasePanelProps) => {
         /* Not listed state */
         <div className="rounded-xl border border-dashed border-border bg-surface/50 p-8 text-center">
           <Lock size={32} className="mx-auto mb-3 text-text-muted/40" />
-          <p className="font-mono text-sm font-medium text-text-muted mb-1">
-            Not Yet Tokenized
-          </p>
+          <p className="font-mono text-sm font-medium text-text-muted mb-1">Not Yet Tokenized</p>
           <p className="font-mono text-xs text-text-muted/60 leading-relaxed">
-            {element.name} is not currently available on the marketplace.
-            Submit a governance proposal to list this element.
+            {element.name} is not currently available on the marketplace. Submit a governance
+            proposal to list this element.
           </p>
           <Button variant="secondary" size="sm" className="mt-4 mx-auto">
             Submit Listing Request
@@ -194,5 +198,5 @@ export const PurchasePanel = ({ element }: PurchasePanelProps) => {
         </div>
       )}
     </motion.div>
-  );
-};
+  )
+}

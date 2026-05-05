@@ -1,9 +1,10 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon } from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
+import { AnimatePresence, motion } from 'framer-motion'
+import { Moon, Sun } from 'lucide-react'
+
+import { useTheme } from '@/hooks/useTheme'
 
 export const ThemeToggle = () => {
-  const { isDark, toggleTheme } = useTheme();
+  const { isDark, toggleTheme } = useTheme()
 
   return (
     <button
@@ -30,5 +31,5 @@ export const ThemeToggle = () => {
         </motion.span>
       </AnimatePresence>
     </button>
-  );
-};
+  )
+}
