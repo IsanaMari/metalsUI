@@ -40,9 +40,6 @@ const CELL_VARIANTS = {
   },
 }
 
-// 57px site header + 97px page-header section + 62px controls bar = 216px
-const GRID_HEIGHT = 'calc(100vh - 216px)'
-
 export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
   const { mainElements, lanthanides, actinides } = useMemo(() => {
     const main = elements
@@ -61,7 +58,7 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
   }, [elements])
 
   return (
-    <div className="w-full">
+    <div className="w-full overflow-visible">
       {/* ── Full-bleed responsive grid ── */}
       <motion.div
         variants={CONTAINER_VARIANTS}
@@ -70,11 +67,10 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
         style={{
           display: 'grid',
           width: '100%',
-          height: GRID_HEIGHT,
           // 18 equal columns — fills 100% viewport width
           gridTemplateColumns: 'repeat(18, 1fr)',
-          // 7 main rows | 6px spacer | 2 f-block rows (slightly shorter)
-          gridTemplateRows: 'repeat(7, 1fr) 6px repeat(2, 0.8fr)',
+          // 7 main rows | 6px spacer | 2 f-block rows — content-sized with a floor
+          gridTemplateRows: 'repeat(7, minmax(44px, auto)) 6px repeat(2, minmax(36px, auto))',
           gap: '1px',
         }}
       >

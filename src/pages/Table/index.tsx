@@ -42,7 +42,7 @@ export const TablePage = () => {
   const hasFilters = !!searchQuery || !!selectedCategory
 
   return (
-    <div className="min-h-screen">
+    <div>
       {/* Page header */}
       <div className="border-b border-border bg-surface/50 px-4 py-6 sm:px-6">
         <div className="mx-auto max-w-screen-2xl">
