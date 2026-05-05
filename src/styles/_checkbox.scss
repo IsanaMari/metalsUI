@@ -1,0 +1,34 @@
+// Custom legend checkbox — uses CSS custom properties from index.css.
+// Per-checkbox accent is injected via --checkbox-color inline style.
+
+.legend-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  border: 2px solid var(--color-border);
+  background-color: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  vertical-align: middle;
+  position: relative;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease;
+
+  &:checked {
+    background-color: var(--checkbox-color, var(--color-border));
+    border-color: var(--checkbox-color, var(--color-border));
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--checkbox-color, var(--color-border));
+    outline-offset: 2px;
+  }
+}
+
+// The CATEGORY_SWATCH values are dark — brighten them on dark backgrounds.
+.dark .legend-checkbox:checked {
+  filter: brightness(2);
+}

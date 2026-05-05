@@ -3,7 +3,9 @@ import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 
 import { ElementCell } from '@/components/ElementCell'
-import { CATEGORY_COLORS } from '@/constants/config'
+import { CATEGORY_COLORS, CATEGORY_SWATCH } from '@/constants/config'
+import { useStore } from '@/store/useStore'
+import type { ElementCategory } from '@/types/element'
 import type { ChemicalElement } from '@/types/element'
 
 interface PeriodicTableProps {
@@ -57,6 +59,8 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
     return { mainElements: main, lanthanides: lans, actinides: acts }
   }, [elements])
 
+  const { activeCategories } = useStore()
+
   return (
     <div className="w-full overflow-visible">
       {/* ── Full-bleed responsive grid ── */}
@@ -75,15 +79,25 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
         }}
       >
         {/* Main table elements */}
-        {mainElements.map((el) => (
-          <motion.div
-            key={el.symbol}
-            variants={CELL_VARIANTS}
-            style={{ gridColumn: el.group, gridRow: el.period }}
-          >
-            <ElementCell element={el} style={{ height: '100%', width: '100%' }} />
-          </motion.div>
-        ))}
+        {mainElements.map((el) => {
+          const isActive = activeCategories[el.category] !== false
+          return (
+            <div
+              key={el.symbol}
+              style={{
+                gridColumn: el.group,
+                gridRow: el.period,
+                opacity: isActive ? 1 : 0.15,
+                pointerEvents: isActive ? undefined : 'none',
+                transition: 'opacity 250ms ease',
+              }}
+            >
+              <motion.div variants={CELL_VARIANTS} style={{ height: '100%', width: '100%' }}>
+                <ElementCell element={el} style={{ height: '100%', width: '100%' }} />
+              </motion.div>
+            </div>
+          )
+        })}
 
         {/* Lanthanide placeholder in main grid (period 6 col 3) */}
         <FBlockPlaceholder label="57–71" style={{ gridColumn: 3, gridRow: 6 }} />
@@ -94,26 +108,46 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
         {/* Spacer row 8 — empty */}
 
         {/* Lanthanide row (row 9), columns 3-17 */}
-        {lanthanides.map((el, i) => (
-          <motion.div
-            key={el.symbol}
-            variants={CELL_VARIANTS}
-            style={{ gridColumn: 3 + i, gridRow: 9 }}
-          >
-            <ElementCell element={el} style={{ height: '100%', width: '100%' }} compact />
-          </motion.div>
-        ))}
+        {lanthanides.map((el, i) => {
+          const isActive = activeCategories[el.category] !== false
+          return (
+            <div
+              key={el.symbol}
+              style={{
+                gridColumn: 3 + i,
+                gridRow: 9,
+                opacity: isActive ? 1 : 0.15,
+                pointerEvents: isActive ? undefined : 'none',
+                transition: 'opacity 250ms ease',
+              }}
+            >
+              <motion.div variants={CELL_VARIANTS} style={{ height: '100%', width: '100%' }}>
+                <ElementCell element={el} style={{ height: '100%', width: '100%' }} compact />
+              </motion.div>
+            </div>
+          )
+        })}
 
         {/* Actinide row (row 10), columns 3-17 */}
-        {actinides.map((el, i) => (
-          <motion.div
-            key={el.symbol}
-            variants={CELL_VARIANTS}
-            style={{ gridColumn: 3 + i, gridRow: 10 }}
-          >
-            <ElementCell element={el} style={{ height: '100%', width: '100%' }} compact />
-          </motion.div>
-        ))}
+        {actinides.map((el, i) => {
+          const isActive = activeCategories[el.category] !== false
+          return (
+            <div
+              key={el.symbol}
+              style={{
+                gridColumn: 3 + i,
+                gridRow: 10,
+                opacity: isActive ? 1 : 0.15,
+                pointerEvents: isActive ? undefined : 'none',
+                transition: 'opacity 250ms ease',
+              }}
+            >
+              <motion.div variants={CELL_VARIANTS} style={{ height: '100%', width: '100%' }}>
+                <ElementCell element={el} style={{ height: '100%', width: '100%' }} compact />
+              </motion.div>
+            </div>
+          )
+        })}
 
         {/* F-block row labels */}
         <div
@@ -146,26 +180,92 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
   )
 }
 
-const LEGEND_ITEMS: Array<{ label: string; cls: string }> = [
-  { label: 'Alkali Metal', cls: CATEGORY_COLORS['alkali-metal'].split(' ')[0] },
-  { label: 'Alkaline Earth', cls: CATEGORY_COLORS['alkaline-earth'].split(' ')[0] },
-  { label: 'Transition Metal', cls: CATEGORY_COLORS['transition-metal'].split(' ')[0] },
-  { label: 'Post-Transition', cls: CATEGORY_COLORS['post-transition'].split(' ')[0] },
-  { label: 'Metalloid', cls: CATEGORY_COLORS['metalloid'].split(' ')[0] },
-  { label: 'Non-Metal', cls: CATEGORY_COLORS['non-metal'].split(' ')[0] },
-  { label: 'Halogen', cls: CATEGORY_COLORS['halogen'].split(' ')[0] },
-  { label: 'Noble Gas', cls: CATEGORY_COLORS['noble-gas'].split(' ')[0] },
-  { label: 'Lanthanide', cls: CATEGORY_COLORS['lanthanide'].split(' ')[0] },
-  { label: 'Actinide', cls: CATEGORY_COLORS['actinide'].split(' ')[0] },
+const LEGEND_ITEMS: Array<{
+  label: string
+  category: ElementCategory
+  cls: string
+  color: string
+}> = [
+  {
+    label: 'Alkali Metal',
+    category: 'alkali-metal',
+    cls: CATEGORY_COLORS['alkali-metal'].split(' ')[0],
+    color: CATEGORY_SWATCH['alkali-metal'],
+  },
+  {
+    label: 'Alkaline Earth',
+    category: 'alkaline-earth',
+    cls: CATEGORY_COLORS['alkaline-earth'].split(' ')[0],
+    color: CATEGORY_SWATCH['alkaline-earth'],
+  },
+  {
+    label: 'Transition Metal',
+    category: 'transition-metal',
+    cls: CATEGORY_COLORS['transition-metal'].split(' ')[0],
+    color: CATEGORY_SWATCH['transition-metal'],
+  },
+  {
+    label: 'Post-Transition',
+    category: 'post-transition',
+    cls: CATEGORY_COLORS['post-transition'].split(' ')[0],
+    color: CATEGORY_SWATCH['post-transition'],
+  },
+  {
+    label: 'Metalloid',
+    category: 'metalloid',
+    cls: CATEGORY_COLORS['metalloid'].split(' ')[0],
+    color: CATEGORY_SWATCH['metalloid'],
+  },
+  {
+    label: 'Non-Metal',
+    category: 'non-metal',
+    cls: CATEGORY_COLORS['non-metal'].split(' ')[0],
+    color: CATEGORY_SWATCH['non-metal'],
+  },
+  {
+    label: 'Halogen',
+    category: 'halogen',
+    cls: CATEGORY_COLORS['halogen'].split(' ')[0],
+    color: CATEGORY_SWATCH['halogen'],
+  },
+  {
+    label: 'Noble Gas',
+    category: 'noble-gas',
+    cls: CATEGORY_COLORS['noble-gas'].split(' ')[0],
+    color: CATEGORY_SWATCH['noble-gas'],
+  },
+  {
+    label: 'Lanthanide',
+    category: 'lanthanide',
+    cls: CATEGORY_COLORS['lanthanide'].split(' ')[0],
+    color: CATEGORY_SWATCH['lanthanide'],
+  },
+  {
+    label: 'Actinide',
+    category: 'actinide',
+    cls: CATEGORY_COLORS['actinide'].split(' ')[0],
+    color: CATEGORY_SWATCH['actinide'],
+  },
 ]
 
-const Legend = () => (
-  <div className="flex flex-wrap gap-2 justify-center px-4 py-3">
-    {LEGEND_ITEMS.map(({ label, cls }) => (
-      <div key={label} className="flex items-center gap-1.5">
-        <div className={`h-3 w-3 rounded-sm ${cls}`} />
-        <span className="font-mono text-[10px] text-text-muted">{label}</span>
-      </div>
-    ))}
-  </div>
-)
+const Legend = () => {
+  const { activeCategories, toggleCategory } = useStore()
+
+  return (
+    <div className="flex flex-wrap gap-2 justify-center px-4 py-3">
+      {LEGEND_ITEMS.map(({ label, cls, category, color }) => (
+        <label key={label} className="flex items-center gap-1.5 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            className="legend-checkbox"
+            style={{ '--checkbox-color': color } as React.CSSProperties}
+            checked={activeCategories[category] !== false}
+            onChange={() => toggleCategory(category)}
+          />
+          <div className={`h-3 w-3 rounded-sm ${cls}`} />
+          <span className="font-mono text-[10px] text-text-muted">{label}</span>
+        </label>
+      ))}
+    </div>
+  )
+}
