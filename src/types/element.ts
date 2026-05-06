@@ -29,7 +29,8 @@ export interface CartItem {
 
 export interface UseConnectReturn {
   isConnected: boolean
-  address: string | null
-  connect: () => void
+  address: string | undefined
+  chainId: number | undefined
+  status: 'connected' | 'disconnected' | 'connecting' | 'reconnecting'
   disconnect: () => void
 }

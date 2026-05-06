@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
+import { WrongNetwork } from '@/components/WrongNetwork'
 import { ROUTES } from '@/constants/config'
 import { ElementDetailPage } from '@/pages/ElementDetail'
 import { TablePage } from '@/pages/Table'
@@ -11,6 +12,7 @@ import { TablePage } from '@/pages/Table'
 export const App = () => (
   <div className="flex min-h-screen flex-col bg-background text-text-primary">
     <Header />
+    <WrongNetwork />
     <main className="flex-1">
       <AnimatePresence mode="wait">
         <Routes>

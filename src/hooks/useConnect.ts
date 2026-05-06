@@ -1,22 +1,16 @@
-import { create } from 'zustand'
+import { useAccount, useDisconnect } from 'wagmi'
 
-import { MOCK_WALLET_ADDRESS } from '@/constants/config'
-import type { UseConnectReturn } from '@/types/element'
-
-// Internal Zustand store — private to this module. Swap the internals for
-// wagmi's useAccount/useConnect without touching any consuming component.
-interface WalletStore {
+export interface UseConnectReturn {
   isConnected: boolean
-  address: string | null
-  connect: () => void
+  address: string | undefined
+  chainId: number | undefined
+  status: 'connected' | 'disconnected' | 'connecting' | 'reconnecting'
   disconnect: () => void
 }
 
-const useWalletStore = create<WalletStore>((set) => ({
-  isConnected: false,
-  address: null,
-  connect: () => set({ isConnected: true, address: MOCK_WALLET_ADDRESS }),
-  disconnect: () => set({ isConnected: false, address: null }),
-}))
+export const useConnect = (): UseConnectReturn => {
+  const { address, chainId, status, isConnected } = useAccount()
+  const { disconnect } = useDisconnect()
 
-export const useConnect = (): UseConnectReturn => useWalletStore()
+  return { isConnected, address, chainId, status, disconnect }
+}

@@ -1,12 +1,24 @@
 import { useCallback, useState } from 'react'
 
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import Decimal from 'decimal.js'
 import { motion } from 'framer-motion'
-import { AlertCircle, CheckCircle2, Lock, ShoppingCart, TrendingUp, Wallet } from 'lucide-react'
+import {
+  AlertCircle,
+  CheckCircle2,
+  Loader2,
+  Lock,
+  ShoppingCart,
+  TrendingUp,
+  Wallet,
+  XCircle,
+} from 'lucide-react'
 
 import { Button, Input } from '@/components'
+import { isSupportedChain } from '@/constants/chains'
 import { MAX_QUANTITY, MIN_QUANTITY, QUANTITY_STEP } from '@/constants/config'
 import { useConnect } from '@/hooks/useConnect'
+import { usePurchaseElement } from '@/hooks/useTokenData'
 import type { ChemicalElement } from '@/types/element'
 
 interface PurchasePanelProps {
@@ -25,6 +37,19 @@ const computeTotal = (price: number, qty: string): string => {
   }
 }
 
+// Strip non-numeric chars, clamp to [MIN, MAX], round to 6 dp.
+// Returns null if the result is outside the valid range.
+const sanitizeQuantity = (raw: string): number | null => {
+  const cleaned = raw.replace(/[^\d.]/g, '')
+  const n = parseFloat(cleaned)
+  if (!Number.isFinite(n) || n <= 0) return null
+  const rounded = Math.round(n * 1_000_000) / 1_000_000
+  const min = parseFloat(MIN_QUANTITY)
+  const max = parseFloat(MAX_QUANTITY)
+  if (rounded < min || rounded > max) return null
+  return rounded
+}
+
 const PANEL_VARIANTS = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -34,13 +59,19 @@ const PANEL_VARIANTS = {
   },
 }
 
+const truncateTx = (hash: string) => `${hash.slice(0, 10)}…${hash.slice(-8)}`
+
 export const PurchasePanel = ({ element }: PurchasePanelProps) => {
-  const { isConnected, connect } = useConnect()
+  const { isConnected, chainId } = useConnect()
+  const { openConnectModal } = useConnectModal()
+  const { purchase, isPending, isSuccess, isError, isUserRejected, error, txHash } =
+    usePurchaseElement()
+
   const [quantity, setQuantity] = useState('1')
-  const [purchaseSuccess, setPurchaseSuccess] = useState(false)
 
   const isListed = element.pricePerGram > 0
   const total = computeTotal(element.pricePerGram, quantity)
+  const wrongNetwork = isConnected && chainId !== undefined && !isSupportedChain(chainId)
 
   const quantityError = (() => {
     const n = parseFloat(quantity)
@@ -51,11 +82,11 @@ export const PurchasePanel = ({ element }: PurchasePanelProps) => {
   })()
 
   const handleBuy = useCallback(() => {
-    if (!isConnected || quantityError || !isListed) return
-    // Placeholder — swap for on-chain tx
-    setPurchaseSuccess(true)
-    setTimeout(() => setPurchaseSuccess(false), 3000)
-  }, [isConnected, quantityError, isListed])
+    if (!isConnected || quantityError || !isListed || wrongNetwork) return
+    const sanitized = sanitizeQuantity(quantity)
+    if (sanitized === null) return
+    purchase(element.symbol, sanitized)
+  }, [isConnected, quantityError, isListed, wrongNetwork, quantity, purchase, element.symbol])
 
   return (
     <motion.div
@@ -143,14 +174,30 @@ export const PurchasePanel = ({ element }: PurchasePanelProps) => {
                   <AlertCircle size={14} />
                   <span className="font-mono text-xs">Connect your wallet to purchase</span>
                 </div>
-                <Button variant="primary" size="lg" fullWidth onClick={connect}>
+                <Button variant="primary" size="lg" fullWidth onClick={openConnectModal}>
                   <Wallet size={16} />
                   Connect Wallet
                 </Button>
               </>
+            ) : wrongNetwork ? (
+              <Button variant="secondary" size="lg" fullWidth disabled>
+                Wrong Network
+              </Button>
             ) : (
               <>
-                {purchaseSuccess && (
+                {/* Transaction state feedback */}
+                {isPending && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex items-center gap-2 rounded-lg border border-border bg-surface-2 px-4 py-3 text-text-muted"
+                  >
+                    <Loader2 size={14} className="animate-spin" />
+                    <span className="font-mono text-xs">Transaction pending…</span>
+                  </motion.div>
+                )}
+
+                {isSuccess && txHash && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -158,15 +205,41 @@ export const PurchasePanel = ({ element }: PurchasePanelProps) => {
                   >
                     <CheckCircle2 size={14} />
                     <span className="font-mono text-xs">
-                      Order submitted! {quantity}g of {element.symbol} for ${total}
+                      Purchase successful! · {truncateTx(txHash)}
                     </span>
                   </motion.div>
                 )}
+
+                {isUserRejected && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex items-center gap-2 rounded-lg border border-border bg-surface-2 px-4 py-3 text-text-muted"
+                  >
+                    <XCircle size={14} />
+                    <span className="font-mono text-xs">Transaction cancelled</span>
+                  </motion.div>
+                )}
+
+                {isError && error && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex items-start gap-2 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-red-600 dark:border-red-500/30 dark:text-red-400"
+                  >
+                    <AlertCircle size={14} className="mt-0.5 shrink-0" />
+                    <span className="font-mono text-xs">
+                      Transaction failed · {error.message.slice(0, 80)}
+                    </span>
+                  </motion.div>
+                )}
+
                 <Button
                   variant="gold"
                   size="lg"
                   fullWidth
-                  disabled={!!quantityError || !isConnected}
+                  loading={isPending}
+                  disabled={!!quantityError || isPending}
                   onClick={handleBuy}
                 >
                   <ShoppingCart size={16} />

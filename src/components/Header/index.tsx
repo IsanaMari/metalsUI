@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { motion } from 'framer-motion'
 import { Atom, ChevronRight, LogOut, Wallet } from 'lucide-react'
 
@@ -10,7 +11,7 @@ import { useConnect } from '@/hooks/useConnect'
 const truncate = (addr: string) => `${addr.slice(0, 6)}…${addr.slice(-4)}`
 
 export const Header = () => {
-  const { isConnected, address, connect, disconnect } = useConnect()
+  const { disconnect } = useConnect()
   const location = useLocation()
   const isDetail = location.pathname.startsWith('/element/')
 
@@ -53,23 +54,40 @@ export const Header = () => {
         {/* Wallet */}
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
-          {isConnected && address ? (
-            <div className="flex items-center gap-2">
-              <div className="hidden sm:flex items-center gap-2 rounded-lg border border-accent/30 bg-accent/10 px-3 py-1.5">
-                <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse-slow" />
-                <span className="font-mono text-xs text-accent">{truncate(address)}</span>
-              </div>
-              <Button variant="ghost" size="sm" onClick={disconnect} title="Disconnect wallet">
-                <LogOut size={14} />
-                <span className="hidden sm:inline">Disconnect</span>
-              </Button>
-            </div>
-          ) : (
-            <Button variant="primary" size="sm" onClick={connect}>
-              <Wallet size={14} />
-              Connect Wallet
-            </Button>
-          )}
+          <ConnectButton.Custom>
+            {({ account, openConnectModal, mounted }) => {
+              if (!mounted) return null
+
+              if (!account) {
+                return (
+                  <Button variant="primary" size="sm" onClick={openConnectModal}>
+                    <Wallet size={14} />
+                    Connect Wallet
+                  </Button>
+                )
+              }
+
+              return (
+                <div className="flex items-center gap-2">
+                  <div className="hidden sm:flex items-center gap-2 rounded-lg border border-accent/30 bg-accent/10 px-3 py-1.5">
+                    <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse-slow" />
+                    <span className="font-mono text-xs text-accent">
+                      {truncate(account.address)}
+                    </span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => disconnect()}
+                    title="Disconnect wallet"
+                  >
+                    <LogOut size={14} />
+                    <span className="hidden sm:inline">Disconnect</span>
+                  </Button>
+                </div>
+              )
+            }}
+          </ConnectButton.Custom>
         </div>
       </div>
     </header>
