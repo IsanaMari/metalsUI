@@ -6,10 +6,12 @@ import { arbitrum, mainnet, optimism, polygon } from 'wagmi/chains'
 import { etherlink } from '@/constants/chains'
 import { useTheme } from '@/hooks/useTheme'
 
-// TODO: Replace with a real WalletConnect project ID from https://cloud.walletconnect.com
+// TODO: Get a free projectId at https://cloud.walletconnect.com — replace the fallback value
+const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID ?? 'demo-project-id-replace-me'
+
 const config = getDefaultConfig({
   appName: 'Tokenized Elements',
-  projectId: 'YOUR_WALLETCONNECT_PROJECT_ID',
+  projectId,
   chains: [etherlink, mainnet, polygon, arbitrum, optimism],
   ssr: true,
 })
