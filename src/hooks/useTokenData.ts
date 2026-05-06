@@ -1,12 +1,19 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { formatEther, parseEther } from 'viem'
 import { useReadContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi'
 
 import { ERC20_ABI, MARKETPLACE_ABI } from '@/constants/abis'
 import { isSupportedChain } from '@/constants/chains'
-import { CONTRACT_ADDRESSES, ZERO_ADDRESS } from '@/constants/contracts'
+import { CONTRACT_ADDRESSES, URANIUM_TOKEN_ADDRESS, ZERO_ADDRESS } from '@/constants/contracts'
 import { useConnect } from '@/hooks/useConnect'
+import {
+  fetchAllTokens,
+  fetchTokenHolders,
+  fetchTokenInfo,
+  fetchTokenTransfers,
+} from '@/services/etherlinkExplorer'
+import type { TokenHolder, TokenInfo, TokenTransfer } from '@/types/token'
 
 const isUserRejection = (err: unknown): boolean => {
   if (!err) return false
@@ -136,4 +143,70 @@ export const usePurchaseElement = (): UsePurchaseElementReturn => {
     error: rawError && !userRejected ? (rawError as Error) : null,
     txHash: txHash as string | undefined,
   }
+}
+
+// ── Etherlink live data ───────────────────────────────────────────────────────
+
+export const useTokenInfo = (address: string | undefined): TokenInfo | null => {
+  const [data, setData] = useState<TokenInfo | null>(null)
+
+  useEffect(() => {
+    if (!address) return
+    let cancelled = false
+    const load = () =>
+      fetchTokenInfo(address).then((d) => {
+        if (!cancelled && d) setData(d)
+      })
+    load()
+    const id = setInterval(load, 60_000)
+    return () => {
+      cancelled = true
+      clearInterval(id)
+    }
+  }, [address])
+
+  return data
+}
+
+export const useUraniumTokenData = (): TokenInfo | null => useTokenInfo(URANIUM_TOKEN_ADDRESS)
+
+// Returns { symbol → address } for all ERC-20 tokens on Etherlink, always includes Uranium
+export const useAllEtherlinkTokens = (): Record<string, string> => {
+  const [tokens, setTokens] = useState<Record<string, string>>({
+    U: URANIUM_TOKEN_ADDRESS,
+  })
+
+  useEffect(() => {
+    fetchAllTokens().then((list) => {
+      const map: Record<string, string> = { U: URANIUM_TOKEN_ADDRESS }
+      list.forEach((t) => {
+        if (t.symbol && t.address) map[t.symbol.toUpperCase()] = t.address
+      })
+      setTokens(map)
+    })
+  }, [])
+
+  return tokens
+}
+
+export const useTokenTransfers = (address: string | undefined): TokenTransfer[] => {
+  const [transfers, setTransfers] = useState<TokenTransfer[]>([])
+
+  useEffect(() => {
+    if (!address) return
+    fetchTokenTransfers(address).then(setTransfers)
+  }, [address])
+
+  return transfers
+}
+
+export const useTokenHolders = (address: string | undefined): TokenHolder[] => {
+  const [holders, setHolders] = useState<TokenHolder[]>([])
+
+  useEffect(() => {
+    if (!address) return
+    fetchTokenHolders(address).then(setHolders)
+  }, [address])
+
+  return holders
 }

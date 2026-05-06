@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 
 import { ElementCell } from '@/components/ElementCell'
 import { CATEGORY_COLORS, CATEGORY_SWATCH } from '@/constants/config'
+import { useAllEtherlinkTokens } from '@/hooks/useTokenData'
 import { useStore } from '@/store/useStore'
 import type { ElementCategory } from '@/types/element'
 import type { ChemicalElement } from '@/types/element'
@@ -60,6 +61,7 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
   }, [elements])
 
   const { activeCategories } = useStore()
+  const liveTokens = useAllEtherlinkTokens()
 
   return (
     <div className="w-full overflow-visible">
@@ -93,7 +95,11 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
               }}
             >
               <motion.div variants={CELL_VARIANTS} style={{ height: '100%', width: '100%' }}>
-                <ElementCell element={el} style={{ height: '100%', width: '100%' }} />
+                <ElementCell
+                  element={el}
+                  style={{ height: '100%', width: '100%' }}
+                  isLive={!!liveTokens[el.symbol.toUpperCase()]}
+                />
               </motion.div>
             </div>
           )
@@ -122,7 +128,12 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
               }}
             >
               <motion.div variants={CELL_VARIANTS} style={{ height: '100%', width: '100%' }}>
-                <ElementCell element={el} style={{ height: '100%', width: '100%' }} compact />
+                <ElementCell
+                  element={el}
+                  style={{ height: '100%', width: '100%' }}
+                  compact
+                  isLive={!!liveTokens[el.symbol.toUpperCase()]}
+                />
               </motion.div>
             </div>
           )
@@ -143,7 +154,12 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
               }}
             >
               <motion.div variants={CELL_VARIANTS} style={{ height: '100%', width: '100%' }}>
-                <ElementCell element={el} style={{ height: '100%', width: '100%' }} compact />
+                <ElementCell
+                  element={el}
+                  style={{ height: '100%', width: '100%' }}
+                  compact
+                  isLive={!!liveTokens[el.symbol.toUpperCase()]}
+                />
               </motion.div>
             </div>
           )

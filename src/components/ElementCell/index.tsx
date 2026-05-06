@@ -10,6 +10,7 @@ interface ElementCellProps {
   element: ChemicalElement
   style?: React.CSSProperties
   compact?: boolean
+  isLive?: boolean
 }
 
 const formatPrice = (price: number): string => {
@@ -19,7 +20,12 @@ const formatPrice = (price: number): string => {
   return `$${price.toFixed(4)}`
 }
 
-export const ElementCell = ({ element, style, compact = false }: ElementCellProps) => {
+export const ElementCell = ({
+  element,
+  style,
+  compact = false,
+  isLive = false,
+}: ElementCellProps) => {
   const navigate = useNavigate()
   const isListed = element.pricePerGram > 0
   const colorClass = CATEGORY_COLORS[element.category]
@@ -45,6 +51,17 @@ export const ElementCell = ({ element, style, compact = false }: ElementCellProp
       title={`${element.name} (${element.symbol}) — ${isListed ? formatPrice(element.pricePerGram) + '/g' : 'Not listed'}`}
       aria-label={`${element.name}`}
     >
+      {/* LIVE badge — top-right corner */}
+      {isLive && (
+        <span
+          className="absolute top-0.5 right-0.5 flex items-center gap-0.5 rounded-sm bg-green-500/20 px-0.5 leading-none"
+          style={{ fontSize: 'clamp(0.25rem, 0.45vw, 0.4rem)' }}
+        >
+          <span className="h-1 w-1 rounded-full bg-green-400 animate-pulse" />
+          <span className="font-mono font-bold text-green-400 uppercase">Live</span>
+        </span>
+      )}
+
       {/* Atomic number — top */}
       <span
         className="font-mono leading-none text-current opacity-70 self-start"

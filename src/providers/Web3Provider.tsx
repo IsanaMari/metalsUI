@@ -3,13 +3,14 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
 import { arbitrum, mainnet, optimism, polygon } from 'wagmi/chains'
 
+import { etherlink } from '@/constants/chains'
 import { useTheme } from '@/hooks/useTheme'
 
 // TODO: Replace with a real WalletConnect project ID from https://cloud.walletconnect.com
 const config = getDefaultConfig({
   appName: 'Tokenized Elements',
   projectId: 'YOUR_WALLETCONNECT_PROJECT_ID',
-  chains: [mainnet, polygon, arbitrum, optimism],
+  chains: [etherlink, mainnet, polygon, arbitrum, optimism],
   ssr: true,
 })
 

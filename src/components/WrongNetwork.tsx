@@ -24,10 +24,10 @@ export const WrongNetwork = () => {
         style={{ color: 'var(--color-text-muted)' }}
       >
         <AlertTriangle size={14} />
-        Please switch to a supported network
+        Switch to Etherlink to interact with tokenized elements
       </div>
-      <Button variant="secondary" size="sm" onClick={() => switchChain({ chainId: 1 })}>
-        Switch Network
+      <Button variant="secondary" size="sm" onClick={() => switchChain({ chainId: 42793 })}>
+        Switch to Etherlink
       </Button>
     </div>
   )
