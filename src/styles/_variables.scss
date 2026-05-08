@@ -1,0 +1,21 @@
+// Spacing scale (mirrors Tailwind's default)
+$spacing-1: 0.25rem;
+$spacing-2: 0.5rem;
+$spacing-3: 0.75rem;
+$spacing-4: 1rem;
+$spacing-5: 1.25rem;
+$spacing-6: 1.5rem;
+$spacing-8: 2rem;
+
+// Breakpoints (match Tailwind sm / md / lg)
+$bp-sm: 640px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+
+// Border radius
+$radius-sm: 0.25rem;
+$radius-md: 0.5rem;
+$radius-lg: 0.75rem;
+$radius-xl: 0.875rem;
+$radius-2xl: 1rem;
+$radius-full: 9999px;

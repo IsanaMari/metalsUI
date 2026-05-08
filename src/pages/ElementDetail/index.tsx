@@ -1,13 +1,20 @@
+import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 
 import { motion } from 'framer-motion'
-import { ArrowLeft, ExternalLink, Users, Zap } from 'lucide-react'
+import { ArrowLeft, ExternalLink, ShoppingCart, Users, Zap } from 'lucide-react'
 import { formatEther } from 'viem'
+import { useAccount } from 'wagmi'
 
+import { Button } from '@/components/Button'
 import { ElementDetails } from '@/components/ElementDetails'
 import { PurchasePanel } from '@/components/PurchasePanel'
+import { TradeModal } from '@/components/TradeModal'
 import { ROUTES } from '@/constants/config'
+import { DEFAULT_FROM_TOKEN, getMetalToken } from '@/constants/metalTokens'
+import { TokenDataPanel } from '@/features/element-details/TokenDataPanel'
 import { useElement } from '@/hooks/useElement'
+import { useMetalPrice } from '@/hooks/useMetalPrice'
 import {
   useAllEtherlinkTokens,
   useTokenHolders,
@@ -58,6 +65,21 @@ const formatAmount = (raw: string): string => {
 export const ElementDetailPage = () => {
   const { symbol } = useParams<{ symbol: string }>()
   const element = useElement(symbol)
+  const [isTradeModalOpen, setTradeModalOpen] = useState(false)
+
+  // Wallet context — used for price hook and TokenDataPanel
+  const { chainId } = useAccount()
+  const effectiveChainId = chainId ?? 1
+  const fromToken = DEFAULT_FROM_TOKEN[effectiveChainId]
+  const fromTokenAddress = fromToken?.address ?? DEFAULT_FROM_TOKEN[1].address
+
+  // LI.FI price quote — lifted from LivePrice sub-component
+  const { quote, isLoading: isLoadingQuote } = useMetalPrice(
+    element?.symbol ?? '',
+    effectiveChainId,
+    fromTokenAddress,
+    '100'
+  )
 
   const liveTokens = useAllEtherlinkTokens()
   const tokenAddress = element ? liveTokens[element.symbol.toUpperCase()] : undefined
@@ -71,6 +93,9 @@ export const ElementDetailPage = () => {
   }
 
   const hasLiveData = !!tokenAddress
+  const metalTokenMapping = getMetalToken(element.symbol)
+  const hasLifiSupport = !!metalTokenMapping
+  const isLoadingToken = !!tokenAddress && !tokenInfo
 
   return (
     <motion.div
@@ -95,9 +120,43 @@ export const ElementDetailPage = () => {
 
         {/* Right — purchase panel */}
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <PurchasePanel element={element} />
+          {hasLifiSupport ? (
+            <div className="flex flex-col gap-4">
+              {/* Token data panel — above the buy button */}
+              <TokenDataPanel
+                element={element}
+                metalToken={metalTokenMapping}
+                quote={quote}
+                tokenInfo={tokenInfo}
+                isLoadingQuote={isLoadingQuote}
+                isLoadingToken={isLoadingToken}
+              />
+
+              {/* Buy button */}
+              <div className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-3">
+                <p className="font-mono text-xs uppercase tracking-wider text-text-muted">
+                  Purchase via LI.FI
+                </p>
+                <Button variant="gold" size="lg" fullWidth onClick={() => setTradeModalOpen(true)}>
+                  <ShoppingCart size={16} />
+                  Buy with Any Token
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <PurchasePanel element={element} />
+          )}
         </div>
       </div>
+
+      {/* LI.FI Trade Modal */}
+      {hasLifiSupport && (
+        <TradeModal
+          isOpen={isTradeModalOpen}
+          onClose={() => setTradeModalOpen(false)}
+          element={element}
+        />
+      )}
 
       {/* Live on-chain data — only shown when a matching token exists */}
       {hasLiveData && (

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 
 import { ElementCell } from '@/components/ElementCell'
 import { CATEGORY_COLORS, CATEGORY_SWATCH } from '@/constants/config'
+import { CHAIN_NAMES, METAL_TOKEN_MAP } from '@/constants/metalTokens'
 import { useAllEtherlinkTokens } from '@/hooks/useTokenData'
 import { useStore } from '@/store/useStore'
 import type { ElementCategory } from '@/types/element'
@@ -63,6 +64,12 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
   const { activeCategories } = useStore()
   const liveTokens = useAllEtherlinkTokens()
 
+  const getLiveTooltip = (symbol: string): string | undefined => {
+    const mapping = METAL_TOKEN_MAP[symbol]
+    if (mapping) return `${mapping.tokenSymbol} on ${CHAIN_NAMES[mapping.chainId] ?? 'Unknown'}`
+    return undefined
+  }
+
   return (
     <div className="w-full overflow-visible">
       {/* ── Full-bleed responsive grid ── */}
@@ -98,7 +105,8 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
                 <ElementCell
                   element={el}
                   style={{ height: '100%', width: '100%' }}
-                  isLive={!!liveTokens[el.symbol.toUpperCase()]}
+                  isLive={!!liveTokens[el.symbol.toUpperCase()] || el.symbol in METAL_TOKEN_MAP}
+                  liveTooltip={getLiveTooltip(el.symbol)}
                 />
               </motion.div>
             </div>
@@ -132,7 +140,8 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
                   element={el}
                   style={{ height: '100%', width: '100%' }}
                   compact
-                  isLive={!!liveTokens[el.symbol.toUpperCase()]}
+                  isLive={!!liveTokens[el.symbol.toUpperCase()] || el.symbol in METAL_TOKEN_MAP}
+                  liveTooltip={getLiveTooltip(el.symbol)}
                 />
               </motion.div>
             </div>
@@ -158,7 +167,8 @@ export const PeriodicTable = ({ elements }: PeriodicTableProps) => {
                   element={el}
                   style={{ height: '100%', width: '100%' }}
                   compact
-                  isLive={!!liveTokens[el.symbol.toUpperCase()]}
+                  isLive={!!liveTokens[el.symbol.toUpperCase()] || el.symbol in METAL_TOKEN_MAP}
+                  liveTooltip={getLiveTooltip(el.symbol)}
                 />
               </motion.div>
             </div>

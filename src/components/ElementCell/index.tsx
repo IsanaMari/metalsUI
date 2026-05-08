@@ -11,6 +11,7 @@ interface ElementCellProps {
   style?: React.CSSProperties
   compact?: boolean
   isLive?: boolean
+  liveTooltip?: string
 }
 
 const formatPrice = (price: number): string => {
@@ -25,6 +26,7 @@ export const ElementCell = ({
   style,
   compact = false,
   isLive = false,
+  liveTooltip,
 }: ElementCellProps) => {
   const navigate = useNavigate()
   const isListed = element.pricePerGram > 0
@@ -56,6 +58,7 @@ export const ElementCell = ({
         <span
           className="absolute top-0.5 right-0.5 flex items-center gap-0.5 rounded-sm bg-green-500/20 px-0.5 leading-none"
           style={{ fontSize: 'clamp(0.25rem, 0.45vw, 0.4rem)' }}
+          title={liveTooltip}
         >
           <span className="h-1 w-1 rounded-full bg-green-400 animate-pulse" />
           <span className="font-mono font-bold text-green-400 uppercase">Live</span>

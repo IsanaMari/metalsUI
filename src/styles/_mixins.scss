@@ -1,0 +1,16 @@
+@use 'variables' as v;
+
+/// Wraps content in a min-width media query.
+/// Usage: @include responsive(v.$bp-md) { … }
+@mixin responsive($bp) {
+  @media (min-width: #{$bp}) {
+    @content;
+  }
+}
+
+/// Smooth transition for theme-sensitive properties.
+@mixin theme-transition($duration: 150ms) {
+  transition-property: background-color, color, border-color, opacity;
+  transition-duration: #{$duration};
+  transition-timing-function: ease;
+}
